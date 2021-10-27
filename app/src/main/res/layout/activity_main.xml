@@ -18,7 +18,7 @@
         android:hint="@string/idinput"
         android:inputType="text"
         android:gravity="center_vertical"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/black"
         android:background="@color/input_background"/>
 
     <EditText
@@ -32,7 +32,7 @@
         android:hint="@string/passwordinput"
         android:inputType="textWebPassword"
         android:gravity="center_vertical"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/black"
         android:background="@color/input_background"/>
 
     <Button
