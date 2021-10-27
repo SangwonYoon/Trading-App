@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    android:background="@color/background">
+
+    <EditText
+        android:id="@+id/memberID"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="100dp"
+        android:paddingLeft="10dp"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/idinput"
+        android:inputType="text"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/darker_gray"
+        android:background="@color/input_background"/>
+
+    <EditText
+        android:id="@+id/memberPassword"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_margin="30dp"
+        android:paddingLeft="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/memberID"
+        android:hint="@string/passwordinput"
+        android:inputType="textWebPassword"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/darker_gray"
+        android:background="@color/input_background"/>
+
+    <Button
+        android:id="@+id/logIn"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/memberPassword"
+        android:text="로그인"/>
+
+    <TextView
+        android:id="@+id/or1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/logIn"
+        android:layout_marginTop="5dp"
+        android:text="or"
+        android:textSize="18dp"
+        />
+
+    <Button
+        android:id="@+id/signIn"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/or1"
+        android:layout_marginTop="5dp"
+        android:text="회원가입"/>
+
+    <TextView
+        android:id="@+id/or2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/signIn"
+        android:layout_marginTop="5dp"
+        android:text="or"
+        android:textSize="18dp"
+        />
+
+    <Button
+        android:id="@+id/noLogIn"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/or2"
+        android:layout_marginTop="5dp"
+        android:text="로그인 없이 상품 보기"/>
+
+
+</RelativeLayout>
