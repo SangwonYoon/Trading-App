@@ -6,6 +6,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import android.graphics.BitmapFactory
+
+import android.graphics.Bitmap
+import java.io.InputStream
+import android.content.ContentResolver
+
+
+
+
 
 class ProductAdapter (val ProductList : ArrayList<Products>) : RecyclerView.Adapter<ProductAdapter.CustomViewHolder>(){
 
@@ -15,7 +24,8 @@ class ProductAdapter (val ProductList : ArrayList<Products>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ProductAdapter.CustomViewHolder, position: Int) {
-        holder.productImage.setImageResource(ProductList.get(position).image)
+        val uri = ProductList.get(position).image
+        holder.productImage.setImageURI(uri)
         holder.productName.text = ProductList.get(position).name
     }
 
@@ -26,5 +36,10 @@ class ProductAdapter (val ProductList : ArrayList<Products>) : RecyclerView.Adap
     class CustomViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         val productImage = itemView.findViewById<ImageView>(R.id.iv_image)
         val productName = itemView.findViewById<TextView>(R.id.tv_name)
+    }
+
+    fun addItem(product: Products){
+        ProductList.add(product)
+        notifyDataSetChanged()
     }
 }

@@ -1,13 +1,21 @@
 package com.example.assignment1
 
+import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,12 +26,13 @@ class ProductActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
 
+        var image : Uri = Uri.parse("")
         val productList = arrayListOf(
-            Products(R.drawable.cuckoo,"쿠쿠 압력 밥솥"),
-            Products(R.drawable.ps, "플레이스테이션 4"),
-            Products(R.drawable.shelf, "철제 선반"),
-            Products(R.drawable.shoes, "아디다스 운동화"),
-            Products(R.drawable.tv, "42인치 UHD TV")
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/cuckoo"),"쿠쿠 압력 밥솥"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/ps"), "플레이스테이션 4"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/shelf"), "철제 선반"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/shoes"), "아디다스 운동화"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/tv"), "42인치 UHD TV")
         )
 
         val rv_product : RecyclerView = findViewById(R.id.rv_product)
@@ -31,31 +40,42 @@ class ProductActivity : AppCompatActivity(){
         rv_product.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_product.setHasFixedSize(true)
 
-        rv_product.adapter = ProductAdapter(productList)
+        val mAdapter = ProductAdapter(productList)
+        rv_product.adapter = mAdapter
+
+        val resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()){
+                result ->
+            if(result.resultCode == Activity.RESULT_OK){
+                val myData : Intent? = result.data
+                val uri = myData?.data
+                image = uri!!
+
+                var name : String
+                val alert : AlertDialog.Builder = AlertDialog.Builder(this)
+                alert.setTitle("등록할 상품명을 적어주세요")
+
+                val productName : EditText = EditText(this)
+                alert.setView(productName)
+
+                alert.setPositiveButton("확인",
+                    {dialogInterface: DialogInterface?, i:Int ->
+                        name = productName.text.toString()
+                        val item = Products(image,name)
+                        //Log.e("Tag", image.toString())
+                        //Log.e("Tag", name)
+                        mAdapter.addItem(item)
+                    })
+
+                alert.setCancelable(false)
+                alert.show()
+            }
+        }
 
         val addButton : Button = findViewById(R.id.add)
         addButton.setOnClickListener{
-            var image : Int
-            var name : String = ""
-
-
-
-            val alert : AlertDialog.Builder = AlertDialog.Builder(this)
-            alert.setTitle("등록할 상품명을 적어주세요")
-
-            val productName : EditText = EditText(this)
-            alert.setView(productName)
-
-            alert.setPositiveButton("확인",
-                {dialogInterface: DialogInterface?, i:Int ->
-                    name = productName.text.toString()
-                })
-
-            alert.setCancelable(false)
-            alert.show()
-
-            val item = Products(image,name)
-            productList.add(item)
+            val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            resultLauncher.launch(intent)
         }
 
         val infoButton : Button = findViewById(R.id.info)
