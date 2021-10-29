@@ -1,8 +1,10 @@
 package com.example.assignment1
 
+import android.Manifest
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -15,22 +17,24 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
-
-val productList = arrayListOf(
-    Products(Uri.parse("android.resource://com.example.assignment1/drawable/cuckoo"),"쿠쿠 압력 밥솥"),
-    Products(Uri.parse("android.resource://com.example.assignment1/drawable/ps"), "플레이스테이션 4"),
-    Products(Uri.parse("android.resource://com.example.assignment1/drawable/shelf"), "철제 선반"),
-    Products(Uri.parse("android.resource://com.example.assignment1/drawable/shoes"), "아디다스 운동화"),
-    Products(Uri.parse("android.resource://com.example.assignment1/drawable/tv"), "42인치 UHD TV")
-)
 
 class ProductActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product)
+
+        val productList = arrayListOf(
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/cuckoo"),"쿠쿠 압력 밥솥"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/ps"), "플레이스테이션 4"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/shelf"), "철제 선반"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/shoes"), "아디다스 운동화"),
+            Products(Uri.parse("android.resource://com.example.assignment1/drawable/tv"), "42인치 UHD TV")
+        )
 
         var image : Uri = Uri.parse("")
 
@@ -69,7 +73,7 @@ class ProductActivity : AppCompatActivity(){
                 val productName : EditText = EditText(this)
                 alert.setView(productName)
 
-                alert.setPositiveButton("확인",
+                alert.setPositiveButton("등록",
                     {dialogInterface: DialogInterface?, i:Int ->
                         name = productName.text.toString()
                         val item = Products(image,name)
@@ -85,8 +89,12 @@ class ProductActivity : AppCompatActivity(){
 
         val addButton : Button = findViewById(R.id.add)
         addButton.setOnClickListener{
-            val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            resultLauncher.launch(intent)
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                resultLauncher.launch(intent)
+            } else{
+                ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),0)
+            }
         }
 
         val deleteButton : ToggleButton = findViewById(R.id.delete)
@@ -136,6 +144,30 @@ class ProductActivity : AppCompatActivity(){
                 )
                 builder.setCancelable(false)
                 builder.show()
+            }
+        }
+    }
+
+    /*
+    fun checkPermission(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            //갤러리 앱에 접근
+        } else{
+        ActivityCompat.requestPermissions(this,arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),0)
+        }
+    }
+     */
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when(requestCode){
+            0 -> {
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,"접근 권한이 허용되었습니다! 상품 등록 버튼을 다시 눌러주세요",Toast.LENGTH_SHORT).show()
+                } else{
+                    Toast.makeText(this,"권한을 승인하지 않으면 갤러리에 접근할 수 없습니다.\n 2회 이상 거절하여 접근 권한 허용창이 뜨지 않는 경우 어플리케이션 설정에서 권한을 허용해주셔야 합니다.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

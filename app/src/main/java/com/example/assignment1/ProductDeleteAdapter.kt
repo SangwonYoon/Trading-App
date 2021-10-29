@@ -14,7 +14,7 @@ class ProductDeleteAdapter (val ProductList : ArrayList<Products>) : RecyclerVie
         return CustomViewHolder(view).apply{
             itemView.setOnClickListener {
                 val curPos : Int = adapterPosition
-                val product : Products = productList.get(curPos)
+                val product : Products = ProductList.get(curPos)
                 deleteItem(product)
             }
         }
