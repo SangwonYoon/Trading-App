@@ -25,12 +25,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <ToggleButton
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="상품 삭제"
+        android:textOff="상품 삭제"
+        android:textOn="삭제 완료"
         app:layout_constraintBottom_toBottomOf="@+id/rv_product"
         app:layout_constraintEnd_toStartOf="@+id/info"
         app:layout_constraintStart_toEndOf="@+id/add" />

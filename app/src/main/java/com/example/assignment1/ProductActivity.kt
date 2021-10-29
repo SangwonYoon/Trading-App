@@ -8,10 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -20,6 +17,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import org.json.JSONArray
+
+val productList = arrayListOf(
+    Products(Uri.parse("android.resource://com.example.assignment1/drawable/cuckoo"),"쿠쿠 압력 밥솥"),
+    Products(Uri.parse("android.resource://com.example.assignment1/drawable/ps"), "플레이스테이션 4"),
+    Products(Uri.parse("android.resource://com.example.assignment1/drawable/shelf"), "철제 선반"),
+    Products(Uri.parse("android.resource://com.example.assignment1/drawable/shoes"), "아디다스 운동화"),
+    Products(Uri.parse("android.resource://com.example.assignment1/drawable/tv"), "42인치 UHD TV")
+)
 
 class ProductActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +33,18 @@ class ProductActivity : AppCompatActivity(){
         setContentView(R.layout.activity_product)
 
         var image : Uri = Uri.parse("")
-        val productList = arrayListOf(
-            Products(Uri.parse("android.resource://com.example.assignment1/drawable/cuckoo"),"쿠쿠 압력 밥솥"),
-            Products(Uri.parse("android.resource://com.example.assignment1/drawable/ps"), "플레이스테이션 4"),
-            Products(Uri.parse("android.resource://com.example.assignment1/drawable/shelf"), "철제 선반"),
-            Products(Uri.parse("android.resource://com.example.assignment1/drawable/shoes"), "아디다스 운동화"),
-            Products(Uri.parse("android.resource://com.example.assignment1/drawable/tv"), "42인치 UHD TV")
-        )
+
+        /*
+        var pref = getSharedPreferences("productList", MODE_PRIVATE)
+        val json = pref?.getString("list",null)
+        val productList = ArrayList<Products>()
+        if(json != null){
+            try{
+                val a = JSONArray(json)
+                for(i in 0 until a.length())
+            }
+        }
+        */
 
         val rv_product : RecyclerView = findViewById(R.id.rv_product)
 
@@ -76,6 +87,18 @@ class ProductActivity : AppCompatActivity(){
         addButton.setOnClickListener{
             val intent = Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             resultLauncher.launch(intent)
+        }
+
+        val deleteButton : ToggleButton = findViewById(R.id.delete)
+        deleteButton.setOnClickListener{
+            if(deleteButton.isChecked) {
+                Toast.makeText(this, "삭제하고자 하는 물품을 클릭해주세요", Toast.LENGTH_SHORT).show()
+                val mAdapter = ProductDeleteAdapter(productList)
+                rv_product.adapter = mAdapter
+            } else{
+                val mAdapter = ProductAdapter(productList)
+                rv_product.adapter = mAdapter
+            }
         }
 
         val infoButton : Button = findViewById(R.id.info)
